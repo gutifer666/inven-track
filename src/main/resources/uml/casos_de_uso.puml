@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+actor Administrador
+actor Empleado
+
+usecase "Gestionar Usuarios" as CU1
+usecase "Gestionar Productos" as CU2
+usecase "Registrar Transacciones" as CU3
+usecase "Generar Informes" as CU4
+
+
+Administrador --> CU1
+Administrador --> CU2
+Administrador --> CU3
+Administrador --> CU4
+
+Empleado --> CU2
+Empleado --> CU3
+Empleado --> CU4
+
+@enduml

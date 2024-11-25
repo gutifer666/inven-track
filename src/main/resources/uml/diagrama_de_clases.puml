@@ -1,0 +1,54 @@
+@startuml
+class User {
+  +id: Long
+  +username: String
+  +password: String
+  +role: Role
+  +email: String
+}
+
+class Product {
+  +id: Long
+  +name: String
+  +description: String
+  +price: Double
+  +stockQuantity: Integer
+  +category: Category
+}
+
+class Category {
+  +id: Long
+  +name: String
+  +description: String
+}
+
+class Transaction {
+  +id: Long
+  +type: String
+  +date: Date
+  +amount: Integer
+  +product: Product
+  +user: User
+}
+
+class Report {
+  +id: Long
+  +title: String
+  +content: String
+  +dateGenerated: Date
+  +createdBy: User
+}
+
+class Role {
+  +id: Long
+  +name: String
+}
+
+User "1" --> "*" Transaction
+User "1" --> "*" Report
+User "1" --> "1" Role
+
+Product "*" --> "1" Category
+Transaction "*" --> "1" Product
+Transaction "*" --> "1" User
+@enduml
