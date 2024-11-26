@@ -1,0 +1,59 @@
+@startuml
+entity "User" as User {
+  * id : INT
+  --
+  username : VARCHAR(50)
+  password : VARCHAR(100)
+  email : VARCHAR(100)
+  role_id : INT
+}
+
+entity "Role" as Role {
+  * id : INT
+  --
+  name : VARCHAR(50)
+}
+
+entity "Product" as Product {
+  * id : INT
+  --
+  name : VARCHAR(100)
+  description : TEXT
+  price : DECIMAL(10, 2)
+  stockQuantity : INT
+  category_id : INT
+}
+
+entity "Category" as Category {
+  * id : INT
+  --
+  name : VARCHAR(50)
+  description : TEXT
+}
+
+entity "Transaction" as Transaction {
+  * id : INT
+  --
+  type : VARCHAR(50)
+  date : DATETIME
+  amount : INT
+  product_id : INT
+  user_id : INT
+}
+
+entity "Report" as Report {
+  * id : INT
+  --
+  title : VARCHAR(100)
+  content : TEXT
+  dateGenerated : DATETIME
+  createdBy : INT
+}
+
+User }o--|| Role : "role_id"
+User ||--o{ Transaction : "user_id"
+User ||--o{ Report : "createdBy"
+Product }o--|| Category : "category_id"
+Transaction }o--|| Product : "product_id"
+Transaction }o--|| User : "user_id"
+@enduml
