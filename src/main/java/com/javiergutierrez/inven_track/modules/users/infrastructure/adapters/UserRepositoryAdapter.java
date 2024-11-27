@@ -52,15 +52,6 @@ public class UserRepositoryAdapter {
 		return user;
 	}
 
-	public Optional<List<User>> findUsersByEmailIn(List<String> emailList) {
-		log.info("Call to findUsersByEmailIn with email list: {}.", emailList);
-		List<User> users = iJpaUserRepository.findByEmailIn(emailList).stream()
-				.map(userMapper::toModel)
-				.collect(Collectors.toList());
-		log.info("Found {} users.", users.size());
-		return Optional.of(users);
-	}
-
 	public Optional<User> updateUser(User user) {
 		log.info("Call to updateUser with ID: {}.", user.getId());
 		UserEntity userEntity = userMapper.toEntity(user);

@@ -31,10 +31,4 @@ public class RetrieveUserUseCase {
 		return userRepositoryAdapter.findUserById(id);
 	}
 
-	public Optional<List<User>> findUsersByEmailIn(List<String> emailList) {
-		log.info("Call to findAllUsersByEmailIn.");
-		Optional<List<User>> userList = userRepositoryAdapter.findUsersByEmailIn(emailList);
-		log.debug(userList.toString());
-		return userList;
-	}
 }

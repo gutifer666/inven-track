@@ -44,11 +44,6 @@ public class UserService {
 		return deleteUserUseCase.deleteUser(id);
 	}
 
-	public Optional<List<User>> findUserByEmail(List<String> emailList) {
-		log.info("Call to findUserByEmail with email {}.", emailList);
-		return retrieveUserUseCase.findUsersByEmailIn(emailList);
-	}
-
 	public Optional<List<User>> findAllUsers() {
 		log.info("Call to findAllUsers.");
 		return retrieveUserUseCase.findAllUsers();
