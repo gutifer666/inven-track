@@ -48,7 +48,6 @@ public class UserEntity {
 	@Schema(description = "Contraseña del usuario")
 	private String password;
 
-	@NotBlank(message = "El email del usuario no puede estar vacío ni ser nulo.")
 	@Size(max = 100, message = "El email del usuario no puede tener más de 100 caracteres.")
 	@Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
 			 message = "El email del usuario no es un email válido.")
