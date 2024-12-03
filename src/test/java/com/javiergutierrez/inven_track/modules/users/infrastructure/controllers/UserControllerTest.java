@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -80,6 +81,7 @@ public class UserControllerTest {
 	// Happy path tests
 
 	@Test
+	@WithMockUser(username = "jdoe", password = "password123")
 	void when_create_user_should_be_a_new_user() throws Exception {
 		String method = "when_create_user_should_be_a_new_user";
 		log.info("Start {}", method);
