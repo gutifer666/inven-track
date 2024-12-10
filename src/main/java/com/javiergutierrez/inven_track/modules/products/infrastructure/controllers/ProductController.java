@@ -1,18 +1,23 @@
 package com.javiergutierrez.inven_track.modules.products.infrastructure.controllers;
 
 import com.javiergutierrez.inven_track.modules.products.application.services.ProductService;
-import com.javiergutierrez.inven_track.modules.products.models.Product;
+import com.javiergutierrez.inven_track.modules.products.domain.Product;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -21,73 +26,60 @@ import java.util.Optional;
 @RestController
 public class ProductController {
 
-	private final ProductService userService;
+	private final ProductService productService;
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Product>> findProductById(@PathVariable Long id) {
-
-		return ResponseEntity.ok(userService.findProductById(id));
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Optional<Product>> deleteProduct(@PathVariable Long id) {
-
-		return ResponseEntity.ok(userService.deleteProduct(id));
-	}
-
-/*	@PostMapping
-	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-		log.info("Call to createUser {}", user);
-		User createdUser = userService.createUser(user).orElseThrow(() -> {
-			log.error("Failed to create user {}", user);
-			return new IllegalStateException("Failed to create user.");
+	@PostMapping
+	public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
+		log.info("Call to createProduct {}", product);
+		Product createdProduct = productService.createProduct(product).orElseThrow(() -> {
+			log.error("Failed to create product {}", product);
+			return new IllegalStateException("Failed to create product.");
 		});
-		log.info("User created {}", createdUser);
-		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+		log.info("Product created {}", createdProduct);
+		return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findUserById(@PathVariable Long id) {
-		log.info("Call to findUserById with ID: {}", id);
-		User user = userService.findUserById(id).orElseThrow(() -> {
-			log.error("Failed to get user with id: {}", id);
-			return new IllegalStateException("Failed to find user with ID: " + id);
+	public ResponseEntity<Product> findProductById(@PathVariable Long id) {
+		log.info("Call to findProductById with ID: {}", id);
+		Product product = productService.findProductById(id).orElseThrow(() -> {
+			log.error("Failed to get product with id: {}", id);
+			return new IllegalStateException("Failed to find product with ID: " + id);
 		});
-		log.info("Successfully retrieved user: {}.", user);
-		return ResponseEntity.ok(user);
+		log.info("Successfully retrieved product: {}.", product);
+		return ResponseEntity.ok(product);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAllUsers() {
-		log.info("Call to findAllUsers.");
-		List<User> userList = userService.findAllUsers().orElseThrow(() -> {
-			log.error("Failed to find users.");
-			return new IllegalStateException("Failed to find users.");
+	public ResponseEntity<List<Product>> findAllProducts() {
+		log.info("Call to findAllProducts.");
+		List<Product> productList = productService.findAllProducts().orElseThrow(() -> {
+			log.error("Failed to find products.");
+			return new IllegalStateException("Failed to find products.");
 		});
-		log.info("Successfully retrieved users: {}.", userList);
-		return ResponseEntity.ok(userList);
+		log.info("Successfully retrieved products: {}.", productList);
+		return ResponseEntity.ok(productList);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
-		log.info("Call to updateUser with id {}.", id);
-		User updatedUser = userService.updateUser(id, user).orElseThrow(() -> {
-			log.error("Failed to update user with id: {}", id);
-			return new IllegalStateException("Failed to update user with ID: " + id);
+	public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+		log.info("Call to updateProduct with id {}.", id);
+		Product updatedProduct = productService.updateProduct(id, product).orElseThrow(() -> {
+			log.error("Failed to update product with id: {}", id);
+			return new IllegalStateException("Failed to update product with ID: " + id);
 		});
-		log.info("Successfully updated user: {}.", updatedUser);
-		return ResponseEntity.ok(updatedUser);
+		log.info("Successfully updated product: {}.", updatedProduct);
+		return ResponseEntity.ok(updatedProduct);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<User> deleteUser(@PathVariable Long id) {
-		log.info("Call to deleteUser with id {}.", id);
-		User deletedUser = userService.deleteUser(id).orElseThrow(() -> {
-			log.error("Failed to delete user with id: {}", id);
-			return new IllegalStateException("Failed to delete user with ID: " + id);
+	public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
+		log.info("Call to deleteProduct with id {}.", id);
+		Product deletedProduct = productService.deleteProduct(id).orElseThrow(() -> {
+			log.error("Failed to delete product with id: {}", id);
+			return new IllegalStateException("Failed to delete product with ID: " + id);
 		});
-		log.info("Successfully deleted user: {}.", deletedUser);
-		return ResponseEntity.ok(deletedUser);
-	}*/
-
+		log.info("Successfully deleted product: {}.", deletedProduct);
+		return ResponseEntity.ok(deletedProduct);
+	}
 }

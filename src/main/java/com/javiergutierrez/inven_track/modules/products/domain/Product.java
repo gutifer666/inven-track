@@ -1,5 +1,6 @@
-package com.javiergutierrez.inven_track.modules.products.models;
+package com.javiergutierrez.inven_track.modules.products.domain;
 
+import com.javiergutierrez.inven_track.modules.category.domain.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,12 @@ public class Product implements Cloneable {
 	@Schema(description = "Identificador único del producto.")
 	private Long id;
 
+	@NotBlank(message = "El código del producto no puede estar vacío ni ser nulo.")
+	@Size(max = 50, message = "El código del producto no puede tener más de 50 caracteres.")
+	@Schema(description = "Código del producto.")
+	private String code;
+
+
 	@NotBlank(message = "El nombre del producto no puede estar vacío ni ser nulo.")
 	@Size(max = 50, message = "El nombre del producto no puede tener más de 50 caracteres.")
 	@Schema(description = "Nombre del producto.")
@@ -32,10 +39,9 @@ public class Product implements Cloneable {
 	@Schema(description = "Descripción del producto.")
 	private String description;
 
-	@NotBlank(message = "La categoría del producto no puede estar vacía ni ser nula.")
-	@Size(max = 50, message = "La categoría del producto no puede tener más de 50 caracteres.")
-	@Schema(description = "Descripción de la  categoría.")
-	private String category;
+	@NotNull(message = "La categoría del producto no puede ser nula.")
+	@Schema(description = "Categoría a la que pertenece el producto.")
+	private Category category;
 
 	@NotNull(message = "El precio del producto no puede ser nulo.")
 	@Schema(description = "Precio del producto.")
