@@ -52,6 +52,18 @@ public class ProductRepositoryAdapter {
 		return product;
 	}
 
+	public Optional<Product> findProductByCode(String code) {
+		log.info("Call to findProductByCode with code: {}.", code);
+		Optional<Product> product = iJpaProductRepository.findByCode(code)
+				.map(productMapper::toModel);
+		if (product.isPresent()) {
+			log.info("Found product with code: {}.", code);
+		} else {
+			log.error("No product found with code: {}.", code);
+		}
+		return product;
+	}
+
 	public Optional<Product> updateProduct(Product product) {
 		log.info("Call to updateProduct with ID: {}.", product.getId());
 		ProductEntity productEntity = productMapper.toEntity(product);

@@ -20,6 +20,24 @@ public class CreateProductUseCase {
 	public Optional<Product> createProduct(Product product) {
 		log.info("Call to createProduct {}", product);
 		log.debug("Product to create: {}", product);
+
+		Optional<Product> existingProduct = productRepositoryAdapter.findProductByCode(product.getCode());
+
+		if (existingProduct.isPresent()) {
+
+			int totalQuantity = existingProduct.get().getQuantity() + product.getQuantity();
+
+			Product productToUpdate = existingProduct.get();
+
+			productToUpdate.setQuantity(totalQuantity);
+
+			log.info("Product exists, updated quantity to: {}", totalQuantity);
+
+			Optional<Product> updatedProduct = productRepositoryAdapter.updateProduct(productToUpdate);
+
+			return updatedProduct;
+		}
+
 		Optional<Product> createdProduct = productRepositoryAdapter.createProduct(product);
 		if (createdProduct.isEmpty()) {
 			throw new IllegalStateException("Failed to create product: " + product);
