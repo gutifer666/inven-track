@@ -4,6 +4,7 @@ import com.javiergutierrez.inven_track.modules.category.domain.Category;
 import com.javiergutierrez.inven_track.modules.products.domain.Product;
 import com.javiergutierrez.inven_track.modules.products.infrastructure.adapters.ProductRepositoryAdapter;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,23 +14,23 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-public class CreateProductUseCaseTest {
+public class RetrieveProductUseCaseTest {
 
 	@Mock
 	private ProductRepositoryAdapter productRepositoryAdapter;
 	@InjectMocks
-	private CreateProductUseCase createProductUseCase;
+	private RetrieveProductUseCase retrieveProductUseCase;
 
 	private static AutoCloseable closeable;
 
@@ -60,65 +61,52 @@ public class CreateProductUseCaseTest {
 
 		expectedProduct = product.clone();
 
-		log.info("End to BeforeEach.");
-	}
+		log.info("End to prepare beforeEach");
 
+	}
 	@AfterEach
 	void afterEach() throws Exception{
 		closeable.close();
 	}
 
+	@AfterAll
+	static void afterAll() throws Exception {
+		log.info("Start to AfterAll");
+		log.info("End to AfterAll");
+		log.info("RetrieveProductUseCaseTest: End to tests");
+	}
+
 	@Test
-	void when_create_product_and_is_not_present_should_be_a_new_product() {
-		String method = "when_create_product_and_is_not_present_should_be_a_new_product";
-		log.info("Start to test: {}", method);
+	void when_find_all_products_should_be_a_list() {
+		String method = "when_find_all_products_should_be_a_list";
+		log.info("Start {}", method);
 
-		when(productRepositoryAdapter.createProduct(product)).thenReturn(Optional.of(expectedProduct));
+		List<Product> productList = List.of(product);
 
-		Optional<Product> resultOptional = createProductUseCase.createProduct(product);
-		assertTrue(resultOptional.isPresent(), "Result should be present.");
-		Product result = resultOptional.get();
+		when(productRepositoryAdapter.findAllProducts()).thenReturn(Optional.of(productList));
 
-		verify(productRepositoryAdapter).createProduct(product);
+		Optional<List<Product>> resultList = retrieveProductUseCase.findAllProducts();
 
-		assertProduct(result);
+		verify(productRepositoryAdapter).findAllProducts();
+		assertTrue(resultList.isPresent(), "Result should be present");
+		assertEquals(1, resultList.get().size(), "Should return one product");
+		assertProduct(resultList.get().get(0));
 
 		log.info("End {}.", method);
 	}
 
 	@Test
-	void  when_create_product_and_is_present_should_update_product_and_increment_quantity() {
-		String method = "when_create_product_and_is_present_should_update_product_and_increment_quantity";
+	void when_find_product_by_id_should_return_product() {
+		String method = "when_find_product_by_id_should_return_product";
 		log.info("Start {}.", method);
 
-		Product existingProduct = product.clone();
-		Product updatedProduct = product.clone();
-		updatedProduct.setQuantity(existingProduct.getQuantity() + 1);
+		when(productRepositoryAdapter.findProductById(1L)).thenReturn(Optional.of(product));
 
-		when(productRepositoryAdapter.findProductByCode(product.getCode())).thenReturn(Optional.of(existingProduct));
-		when(productRepositoryAdapter.updateProduct(existingProduct)).thenReturn(Optional.of(updatedProduct));
+		Optional<Product> resultOptional = retrieveProductUseCase.findProductById(1L);
 
-		Optional<Product> resultOptional = createProductUseCase.createProduct(product);
-		assertTrue(resultOptional.isPresent(), "Result should be present.");
-		Product result = resultOptional.get();
-
-		verify(productRepositoryAdapter).findProductByCode(product.getCode());
-		verify(productRepositoryAdapter).updateProduct(existingProduct);
-
-		assertEquals(2, result.getQuantity(), "Quantity should be incremented.");
-
-	}
-
-	@Test
-	void when_create_product_fails_should_throw_exception() {
-		String method = "when_create_product_fails_should_throw_exception";
-		log.info("Start {}.", method);
-
-		when(productRepositoryAdapter.createProduct(product)).thenReturn(Optional.empty());
-
-		assertThrows(IllegalStateException.class, () -> createProductUseCase.createProduct(product));
-
-		verify(productRepositoryAdapter).createProduct(product);
+		verify(productRepositoryAdapter).findProductById(1L);
+		assertTrue(resultOptional.isPresent(), "Result should be present");
+		assertProduct(resultOptional.get());
 
 		log.info("End {}.", method);
 	}

@@ -72,15 +72,20 @@ public class ProductRepositoryAdapter {
 		return Optional.of(productMapper.toModel(updatedProductEntity));
 	}
 
-	public boolean deleteProduct(Long id) {
+	public Optional<Product> deleteProduct(Long id) {
 		log.info("Call to deleteProduct with ID: {}.", id);
-		if (iJpaProductRepository.existsById(id)) {
+
+		Optional<Product> product = iJpaProductRepository.findById(id).map(productMapper::toModel);
+
+		if (product.isPresent()) {
 			iJpaProductRepository.deleteById(id);
 			log.info("Deleted product with ID: {}.", id);
-			return true;
-		} else {
-			log.error("No product found with ID: {}.", id);
-			return false;
+			return product;
 		}
+
+		log.error("No product found with ID: {}.", id);
+
+		return product;
+
 	}
 }

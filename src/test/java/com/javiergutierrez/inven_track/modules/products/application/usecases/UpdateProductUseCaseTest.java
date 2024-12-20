@@ -4,7 +4,7 @@ import com.javiergutierrez.inven_track.modules.category.domain.Category;
 import com.javiergutierrez.inven_track.modules.products.domain.Product;
 import com.javiergutierrez.inven_track.modules.products.infrastructure.adapters.ProductRepositoryAdapter;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +24,14 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-public class CreateProductUseCaseTest {
+public class UpdateProductUseCaseTest {
 
 	@Mock
 	private ProductRepositoryAdapter productRepositoryAdapter;
 	@InjectMocks
-	private CreateProductUseCase createProductUseCase;
+	private UpdateProductUseCase updateProductUseCase;
 
-	private static AutoCloseable closeable;
-
+	private static AutoCloseable closable;
 	private Product product;
 	private Product expectedProduct;
 
@@ -40,7 +39,7 @@ public class CreateProductUseCaseTest {
 	void beforeEach() {
 		log.info("Start to prepare beforeEach");
 
-		closeable = MockitoAnnotations.openMocks(this);
+		closable = MockitoAnnotations.openMocks(this);
 
 		Category category = Category.builder()
 				.id(1L)
@@ -59,66 +58,47 @@ public class CreateProductUseCaseTest {
 				.build();
 
 		expectedProduct = product.clone();
-
-		log.info("End to BeforeEach.");
 	}
 
-	@AfterEach
-	void afterEach() throws Exception{
-		closeable.close();
-	}
-
-	@Test
-	void when_create_product_and_is_not_present_should_be_a_new_product() {
-		String method = "when_create_product_and_is_not_present_should_be_a_new_product";
-		log.info("Start to test: {}", method);
-
-		when(productRepositoryAdapter.createProduct(product)).thenReturn(Optional.of(expectedProduct));
-
-		Optional<Product> resultOptional = createProductUseCase.createProduct(product);
-		assertTrue(resultOptional.isPresent(), "Result should be present.");
-		Product result = resultOptional.get();
-
-		verify(productRepositoryAdapter).createProduct(product);
-
-		assertProduct(result);
-
-		log.info("End {}.", method);
+	@AfterAll
+	static void afterAll() throws Exception {
+		log.info("End to tests");
+		closable.close();
+		log.info("End to AfterAll");
+		log.info("\tIUpdateProductUseCaseImplTest: Finishing tests");
 	}
 
 	@Test
-	void  when_create_product_and_is_present_should_update_product_and_increment_quantity() {
-		String method = "when_create_product_and_is_present_should_update_product_and_increment_quantity";
+	void when_update_product_should_be_an_updated_product() {
+		String method = "when_update_product_should_be_an_updated_product";
 		log.info("Start {}.", method);
 
-		Product existingProduct = product.clone();
-		Product updatedProduct = product.clone();
-		updatedProduct.setQuantity(existingProduct.getQuantity() + 1);
+		when(productRepositoryAdapter.findProductById(1L)).thenReturn(Optional.of(product));
+		when(productRepositoryAdapter.updateProduct(product)).thenReturn(Optional.of(product));
 
-		when(productRepositoryAdapter.findProductByCode(product.getCode())).thenReturn(Optional.of(existingProduct));
-		when(productRepositoryAdapter.updateProduct(existingProduct)).thenReturn(Optional.of(updatedProduct));
+		Optional<Product> resultOptional = updateProductUseCase.updateProduct(1L, product);
 
-		Optional<Product> resultOptional = createProductUseCase.createProduct(product);
+		verify(productRepositoryAdapter).findProductById(1L);
+		verify(productRepositoryAdapter).updateProduct(product);
+
 		assertTrue(resultOptional.isPresent(), "Result should be present.");
-		Product result = resultOptional.get();
-
-		verify(productRepositoryAdapter).findProductByCode(product.getCode());
-		verify(productRepositoryAdapter).updateProduct(existingProduct);
-
-		assertEquals(2, result.getQuantity(), "Quantity should be incremented.");
-
+		assertProduct(resultOptional.get());
 	}
 
 	@Test
-	void when_create_product_fails_should_throw_exception() {
-		String method = "when_create_product_fails_should_throw_exception";
+	void when_update_product_should_be_an_exception_when_product_not_found() {
+		String method = "when_update_product_should_be_an_exception_when_product_not_found";
 		log.info("Start {}.", method);
 
-		when(productRepositoryAdapter.createProduct(product)).thenReturn(Optional.empty());
+		when(productRepositoryAdapter.findProductById(1L)).thenReturn(Optional.empty());
 
-		assertThrows(IllegalStateException.class, () -> createProductUseCase.createProduct(product));
+		IllegalStateException thrownException = assertThrows(IllegalStateException.class,
+				() -> updateProductUseCase.updateProduct(1L, product),
+				"Expected updateUser() to throw, but it didn't");
 
-		verify(productRepositoryAdapter).createProduct(product);
+		verify(productRepositoryAdapter).findProductById(1L);
+
+		assertTrue(thrownException.getMessage().contains("Failed to get product with ID: 1"));
 
 		log.info("End {}.", method);
 	}
@@ -133,7 +113,5 @@ public class CreateProductUseCaseTest {
 		assertEquals(expectedProduct.getCategory(), product.getCategory(), "Category should be the same.");
 		assertEquals(expectedProduct.getPrice(), product.getPrice(), "Price should be the same.");
 		assertEquals(expectedProduct.getQuantity(), product.getQuantity(), "Quantity should be the same.");
-
 	}
-
 }

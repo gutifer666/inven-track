@@ -17,13 +17,34 @@ public class DeleteProductUseCase {
 
 	private ProductRepositoryAdapter productRepositoryAdapter;
 
-	public Optional<Product> deleteProduct(long productId) {
-		log.info("Call to deleteProduct {}", productId);
-		boolean isDeleted = productRepositoryAdapter.deleteProduct(productId);
-		if (!isDeleted) {
-			throw new IllegalStateException("Failed to delete product with ID: " + productId);
+	public Optional<Product> deleteProduct(long id) {
+		log.info("Call to deleteProduct {}", id);
+		log.debug("Product to delete: {}", id);
+
+		Optional<Product> productOptional = productRepositoryAdapter.findProductById(id);
+
+		if (productOptional.isPresent()) {
+			Product product = productOptional.get();
+			if (product.getQuantity() > 1) {
+				return decrementProductQuantity(product);
+			}
 		}
-		return Optional.empty();
+
+		return deleteProductByIdOrElseThrow(id);
+	}
+
+	private Optional<Product> decrementProductQuantity(Product product) {
+		int reducedQuantity = product.getQuantity() - 1;
+		product.setQuantity(reducedQuantity);
+		productRepositoryAdapter.updateProduct(product);
+		log.info("Reduced product quantity to {}", reducedQuantity);
+		return Optional.of(product);
+	}
+
+	private Optional<Product> deleteProductByIdOrElseThrow(long id) {
+		// Implement Throw
+		return productRepositoryAdapter.deleteProduct(id);
+
 	}
 
 }
