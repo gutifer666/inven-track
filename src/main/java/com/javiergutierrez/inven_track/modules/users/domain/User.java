@@ -1,9 +1,7 @@
 package com.javiergutierrez.inven_track.modules.users.domain;
 
-import com.javiergutierrez.inven_track.modules.category.domain.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString()
 @EqualsAndHashCode()
-public class Users implements Cloneable {
+public class User implements Cloneable {
 
 	@Schema(description = "Identificador único del usuario.")
 	private Long id;
@@ -33,10 +31,28 @@ public class Users implements Cloneable {
 	@Schema(description = "Password del usuario.")
 	private String password;
 
+	@NotBlank(message = "El rol del usuario no puede estar vacío ni ser nulo.")
+	@Size(max = 50, message = "El rol del usuario no puede tener más de 50 caracteres.")
+	@Schema(description = "Rol del usuario.")
+	private String roles;
+
+	@NotBlank(message = "El nombre completo del usuario no puede estar vacío ni ser nulo.")
+	@Size(max = 100, message = "El nombre completo del usuario no puede tener más de 100 caracteres.")
+	@Schema(description = "Nombre completo del usuario.")
+	private String fullName;
+
+	@Builder.Default
+	@Schema(description = "Ventas totales.")
+	private Integer sales = 0;
+
+	@Builder.Default
+	@Schema(description = "Ganancias totales.")
+	private Double earnings = 0.0;
+
 	@Override
-	public Users clone() {
+	public User clone() {
 		try {
-			return (Users) super.clone();
+			return (User) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new AssertionError();
 		}

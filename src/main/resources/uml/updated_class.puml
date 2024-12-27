@@ -1,0 +1,58 @@
+@startuml
+' Opcional: Estilo básico
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam classFontName Arial
+
+title Inventory System Diagram
+
+' ===========================================================================
+' =                               ENTITIES                                  =
+' ===========================================================================
+class TransactionEntity {
+  + Long id
+  + String customerName
+  + String productCode
+  + String productName
+  + Double transactionPrice
+  + Date createdAt
+}
+
+class ProductEntity {
+  + Long id
+  + String code
+  + String name
+  + String description
+  + Double price
+  + Integer quantity
+  + CategoryEntity category
+}
+
+class CategoryEntity {
+  + Long id
+  + String name
+  + String description
+}
+
+' ===========================================================================
+' =                                MODELOS                                  =
+' ===========================================================================
+class Transaction {
+  + Long id
+  + String customerName
+  + String productCode
+  + String productName
+  + Double transactionPrice
+  + Date createdAt
+  --
+  + clone() : Transaction
+  + Transaction(String customerName, Product product)
+}
+
+' ===========================================================================
+' =                              RELACIONES                                 =
+' ===========================================================================
+' Relación de categorías a productos: una categoría puede tener muchos productos
+CategoryEntity "1" -- "many" ProductEntity
+
+@enduml

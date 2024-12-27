@@ -1,35 +1,45 @@
-/*
 package com.javiergutierrez.inven_track.modules.users.domain;
 
-import com.javiergutierrez.inven_track.modules.users.infrastructure.entities.UsersEntity;
+import com.javiergutierrez.inven_track.modules.users.infrastructure.entities.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class UserPrincipal implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
-	private final Users user;
+	private final String username;
+	private final String password;
+	private final List<GrantedAuthority> authorities;
 
-	public UserPrincipal(Users user) {
-		this.user = user;
+
+	public MyUserDetails(UserEntity userEntity) {
+
+		this.username = userEntity.getUsername();
+		this.password = userEntity.getPassword();
+		this.authorities = Arrays.stream(userEntity.getRoles().split(", "))
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
+
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new SimpleGrantedAuthority("USER"));
+		return authorities;
 	}
 
 	@Override
 	public String getPassword() {
-		return user.getPassword();
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		return user.getUsername();
+		return username;
 	}
 
 	@Override
@@ -52,4 +62,3 @@ public class UserPrincipal implements UserDetails {
 		return true;
 	}
 }
-*/

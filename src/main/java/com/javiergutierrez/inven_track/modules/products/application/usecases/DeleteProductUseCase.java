@@ -17,7 +17,7 @@ public class DeleteProductUseCase {
 
 	private ProductRepositoryAdapter productRepositoryAdapter;
 
-	public Optional<Product> deleteProduct(long id) {
+	public Optional<Product> deleteProduct(long id) throws IllegalStateException {
 		log.info("Call to deleteProduct {}", id);
 		log.debug("Product to delete: {}", id);
 
@@ -41,10 +41,15 @@ public class DeleteProductUseCase {
 		return Optional.of(product);
 	}
 
-	private Optional<Product> deleteProductByIdOrElseThrow(long id) {
-		// Implement Throw
-		return productRepositoryAdapter.deleteProduct(id);
-
+	private Optional<Product> deleteProductByIdOrElseThrow(long id) throws IllegalStateException {
+		try {
+			productRepositoryAdapter.deleteProduct(id);
+			log.info("Product with id {} deleted successfully", id);
+			return Optional.empty();
+		} catch (Exception e) {
+			log.error("Failed to delete product with id {}", id, e);
+			throw new IllegalStateException("Failed to delete product: " + id, e);
+		}
 	}
 
 }
