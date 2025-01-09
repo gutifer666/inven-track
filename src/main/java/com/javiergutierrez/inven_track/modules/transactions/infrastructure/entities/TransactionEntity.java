@@ -36,6 +36,12 @@ public class TransactionEntity {
 	@Schema(description = "Identificador único de la transacción.")
 	private Long id;
 
+	@NotBlank(message = "El nombre del empleado no puede estar vacío ni ser nulo.")
+	@Size(max = 50, message = "El nombre del empleado no puede tener más de 50 caracteres.")
+	@Column(nullable = false, length = 50)
+	@Schema(description = "Nombre del empleado.")
+	private String employeeName;
+
 	@NotBlank(message = "El nombre del cliente no puede estar vacío ni ser nulo.")
 	@Size(max = 50, message = "El nombre del cliente no puede tener más de 50 caracteres.")
 	@Column(nullable = false, length = 50)
@@ -53,6 +59,11 @@ public class TransactionEntity {
 	@Column(nullable = false, length = 50)
 	@Schema(description = "Nombre del producto.")
 	private String productName;
+
+	@NotNull(message = "La cantidad no puede ser nula.")
+	@Column(nullable = false)
+	@Schema(description = "Cantidad de productos en la transacción.")
+	private Integer quantity;
 
 	@NotNull(message = "El precio de la transacción no puede ser nula.")
 	@Column(nullable = false)

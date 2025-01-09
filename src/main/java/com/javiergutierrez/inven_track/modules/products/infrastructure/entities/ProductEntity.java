@@ -64,7 +64,12 @@ public class ProductEntity {
 	@NotNull(message = "El precio del producto no puede ser nulo.")
 	@Column(nullable = false)
 	@Schema(description = "Precio del producto.")
-	private Double price;
+	private Double costPrice;
+
+	@NotNull(message = "El precio de venta del producto no puede ser nulo.")
+	@Schema(description = "Precio de venta del producto.")
+	@Column(nullable = false)
+	private Double retailPrice;
 
 	@NotNull(message = "La cantidad del producto no puede ser nula.")
 	@Column(nullable = false)

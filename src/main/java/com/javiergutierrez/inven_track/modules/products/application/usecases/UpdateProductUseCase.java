@@ -28,7 +28,8 @@ public class UpdateProductUseCase {
 		existingProduct.setName(product.getName());
 		existingProduct.setDescription(product.getDescription());
 		existingProduct.getCategory().setId(product.getCategory().getId());
-		existingProduct.setPrice(product.getPrice());
+		existingProduct.setCostPrice(product.getCostPrice());
+		existingProduct.setRetailPrice(product.getRetailPrice());
 		existingProduct.setQuantity(product.getQuantity());
 
 		log.debug("Product after update. {}", existingProduct);

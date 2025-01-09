@@ -49,6 +49,22 @@ public class User implements Cloneable {
 	@Schema(description = "Ganancias totales.")
 	private Double earnings = 0.0;
 
+	public void addSale(Integer quantity) {
+		this.sales += quantity;
+	}
+
+	public void addEarnings(Double amount) {
+		this.earnings += amount;
+	}
+
+	public void removeSale(Integer quantity) {
+		this.sales -= quantity;
+	}
+
+	public void removeEarnings(Double amount) {
+		this.earnings -= amount;
+	}
+
 	@Override
 	public User clone() {
 		try {

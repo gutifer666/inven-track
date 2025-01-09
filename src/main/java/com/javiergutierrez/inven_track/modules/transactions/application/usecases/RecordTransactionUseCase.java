@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 @Transactional
 @Component
-public class CreateTransactionUseCase {
+public class RecordTransactionUseCase {
 
 	private TransactionRepositoryAdapter transactionRepositoryAdapter;
 

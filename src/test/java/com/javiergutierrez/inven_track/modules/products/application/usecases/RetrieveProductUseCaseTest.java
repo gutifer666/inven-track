@@ -55,7 +55,7 @@ public class RetrieveProductUseCaseTest {
 				.name("Bicicleta")
 				.description("Bicicleta BH de montaña")
 				.category(category)
-				.price(500.00)
+				.costPrice(500.00)
 				.quantity(1)
 				.build();
 
@@ -119,7 +119,7 @@ public class RetrieveProductUseCaseTest {
 		assertEquals(expectedProduct.getName(), product.getName(), "Name should be the same.");
 		assertEquals(expectedProduct.getDescription(), product.getDescription(), "Description should be the same.");
 		assertEquals(expectedProduct.getCategory(), product.getCategory(), "Category should be the same.");
-		assertEquals(expectedProduct.getPrice(), product.getPrice(), "Price should be the same.");
+		assertEquals(expectedProduct.getCostPrice(), product.getCostPrice(), "Price should be the same.");
 		assertEquals(expectedProduct.getQuantity(), product.getQuantity(), "Quantity should be the same.");
 
 	}

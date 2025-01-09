@@ -1,8 +1,8 @@
 package com.javiergutierrez.inven_track.modules.transactions.domain;
 
 import com.javiergutierrez.inven_track.modules.products.domain.Product;
+import com.javiergutierrez.inven_track.modules.users.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,9 +26,13 @@ public class Transaction implements Cloneable {
 	@Schema(description = "Identificador único de la transacción.")
 	private Long id;
 
+	@NotBlank(message = "El nombre del empleado no puede estar vacío ni ser nulo.")
+	@Size(max = 50, message = "El nombre del empleado no puede tener más de 50 caracteres.")
+	@Schema(description = "Nombre del empleado.")
+	private String employeeName;
+
 	@NotBlank(message = "El nombre del cliente no puede estar vacío ni ser nulo.")
 	@Size(max = 50, message = "El nombre del cliente no puede tener más de 50 caracteres.")
-	@Column(nullable = false, length = 50)
 	@Schema(description = "Nombre del cliente.")
 	private String clientName;
 
@@ -42,6 +46,10 @@ public class Transaction implements Cloneable {
 	@Schema(description = "Nombre del producto.")
 	private String productName;
 
+	@NotNull(message = "La cantidad no puede ser nula.")
+	@Schema(description = "Cantidad de productos en la transacción.")
+	private Integer quantity;
+
 
 	@NotNull(message = "El precio de la transacción no puede ser nula.")
 	@Schema(description = "Precio de la transacción.")
@@ -50,6 +58,21 @@ public class Transaction implements Cloneable {
 	@Builder.Default
 	@Schema(description = "Fecha de realización de la transacción.")
 	private Date createdAt = new Date();
+
+	public Transaction(User employee, String clientName, Product product, Integer quantity)
+	{
+		assert quantity > 0 : "La cantidad de productos debe ser mayor a 0.";
+		assert product.hasStock(quantity) : "No hay suficientes productos en stock.";
+
+		this.employeeName = employee.getFullName();
+		this.clientName = clientName;
+		this.productCode = product.getCode();
+		this.productName = product.getName();
+		this.quantity = quantity;
+		this.transactionPrice = product.sellingGain() * quantity;
+		this.createdAt = new Date();
+
+	}
 
 	@Override
 	public Transaction clone() {
@@ -60,12 +83,4 @@ public class Transaction implements Cloneable {
 		}
 	}
 
-	public Transaction(String clientName, Product product)
-	{
-		this.clientName = clientName;
-		this.productCode = product.getCode();
-		this.productName = product.getName();
-		this.transactionPrice = product.getPrice();
-		this.createdAt = new Date();
-	}
 }

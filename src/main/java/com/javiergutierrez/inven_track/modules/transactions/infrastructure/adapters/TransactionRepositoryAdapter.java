@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Slf4j
@@ -29,5 +31,15 @@ public class TransactionRepositoryAdapter {
 		log.debug("Transaction created: {}", createdTransactionEntity);
 
 		return Optional.of(transactionMapper.toModel(createdTransactionEntity));
+	}
+
+	public Optional<List<Transaction>> findAllTransactions() {
+		log.info("Call to findAllTransactions.");
+		List<Transaction> transactionList = iJpaTransactionRepository.findAll().stream()
+				.map(transactionMapper::toModel)
+				.collect(Collectors.toList());
+		log.info("Found {} transactions.", transactionList.size());
+		log.debug("Transactions found: {}", transactionList);
+		return Optional.of(transactionList);
 	}
 }

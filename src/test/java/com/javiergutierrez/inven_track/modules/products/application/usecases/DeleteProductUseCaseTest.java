@@ -54,7 +54,7 @@ public class DeleteProductUseCaseTest {
 				.name("Bicicleta")
 				.description("Bicicleta BH de montaña")
 				.category(category)
-				.price(500.00)
+				.costPrice(500.00)
 				.quantity(1)
 				.build();
 
